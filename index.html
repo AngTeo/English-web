@@ -3,9 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Flashcards - Học Tiếng Anh</title>
+  <title>FlashAI - TypeScript Không Cần Node.js</title>
+  <!-- Tailwind CSS cho giao diện -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- 1. BỘ BIÊN DỊCH TYPESCRIPT TRỰC TIẾP (Thay thế hoàn toàn cho Node.js) -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
   <style>
     .perspective-1000 { perspective: 1000px; }
     .transform-style-3d { transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -35,43 +40,38 @@
     </div>
   </header>
 
-  <!-- Thân trang web -->
+  <!-- Thân trang web: Flashcard & Dictation -->
   <main class="max-w-md mx-auto w-full px-4 py-6 flex-1 flex flex-col justify-center">
 
     <!-- Flashcard lật 3D -->
     <div class="perspective-1000 w-full h-72 cursor-pointer mb-5" onclick="toggleFlip()">
       <div id="flashcard" class="transform-style-3d relative w-full h-full shadow-lg rounded-2xl">
-        
-        <!-- Mặt trước (Tiếng Anh) -->
         <div class="backface-hidden absolute inset-0 bg-white border border-slate-200 rounded-2xl p-6 flex flex-col justify-between items-center text-center">
           <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Từ vựng (Chạm để xem nghĩa)</span>
           <div>
             <h2 id="cardWord" class="text-3xl font-extrabold text-slate-800 mb-2"></h2>
             <p id="cardPhonetic" class="text-sm font-mono text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md inline-block"></p>
           </div>
-          <button onclick="event.stopPropagation(); playSpeech();" class="p-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-full transition shadow-sm" title="Nghe phát âm">
+          <button onclick="event.stopPropagation(); playSpeech();" class="p-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-full transition">
             <i class="fa-solid fa-volume-high text-lg"></i>
           </button>
         </div>
-
-        <!-- Mặt sau (Tiếng Việt) -->
         <div class="backface-hidden rotate-y-180 absolute inset-0 bg-indigo-600 text-white rounded-2xl p-6 flex flex-col justify-between items-center text-center shadow-lg">
-          <span class="text-[11px] font-bold uppercase tracking-wider text-indigo-200">Ý nghĩa & Ngữ cảnh</span>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-indigo-200">Ý nghĩa & Ví dụ</span>
           <div>
             <h3 id="cardMeaning" class="text-2xl font-bold mb-2"></h3>
             <p id="cardExample" class="text-sm text-indigo-100 italic px-2"></p>
           </div>
           <span class="text-[11px] text-indigo-200">Chạm để lật lại</span>
         </div>
-
       </div>
     </div>
 
-    <!-- Chế độ Dictation (Luyện nghe chép từ) -->
+    <!-- Ô luyện gõ (Dictation) -->
     <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm mb-5">
       <div class="flex justify-between items-center mb-2">
         <label class="text-xs font-bold text-slate-600 uppercase">Luyện nghe & gõ lại:</label>
-        <button onclick="playSpeech()" class="text-xs text-indigo-600 font-semibold hover:underline flex items-center gap-1">
+        <button onclick="playSpeech()" class="text-xs text-indigo-600 font-semibold hover:underline">
           <i class="fa-solid fa-volume-low"></i> Nghe lại
         </button>
       </div>
@@ -82,25 +82,33 @@
       <p id="dictationFeedback" class="text-xs mt-2 font-medium hidden"></p>
     </div>
 
-    <!-- Nút điều hướng -->
+    <!-- Điều hướng -->
     <div class="flex justify-between items-center">
       <button onclick="changeCard(-1)" class="px-4 py-2 rounded-xl border border-slate-300 bg-white text-slate-700 font-semibold text-xs hover:bg-slate-50 transition">
-        <i class="fa-solid fa-arrow-left mr-1"></i> Từ trước
+        <i class="fa-solid fa-arrow-left mr-1"></i> Trước
       </button>
       <span id="counter" class="text-xs text-slate-500 font-bold">1 / 5</span>
       <button onclick="changeCard(1)" class="px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold text-xs hover:bg-indigo-700 transition">
-        Từ tiếp <i class="fa-solid fa-arrow-right ml-1"></i>
+        Tiếp <i class="fa-solid fa-arrow-right ml-1"></i>
       </button>
     </div>
-
   </main>
 
   <footer class="text-center py-4 text-xs text-slate-400">
-    FlashAI &bull; Hoàn toàn miễn phí qua Web Speech API
+    Chạy TypeScript trực tiếp không cần Node.js
   </footer>
 
-  <script>
-    const deck = [
+  <!-- 2. CODE TYPESCRIPT VIẾT TRỰC TIẾP TẠI ĐÂY (type="text/typescript") -->
+  <script type="text/typescript">
+    // Định nghĩa Interface chuẩn TypeScript
+    interface VocabItem {
+      word: string;
+      phonetic: string;
+      meaning: string;
+      example: string;
+    }
+
+    const deck: VocabItem[] = [
       { word: "Persevere", phonetic: "/ˌpɜː.sɪˈvɪər/", meaning: "Kiên trì, bền chí", example: "She persevered through all hardships to graduate." },
       { word: "Resilient", phonetic: "/rɪˈzɪl.jənt/", meaning: "Kiên cường, mau hồi phục", example: "He is resilient and never gives up easily." },
       { word: "Eloquent", phonetic: "/ˈel.ə.kwənt/", meaning: "Lưu loát, hùng biện", example: "Her presentation was both eloquent and convincing." },
@@ -108,82 +116,68 @@
       { word: "Innovative", phonetic: "/ˈɪn.ə.veɪ.tɪv/", meaning: "Sáng tạo, đổi mới", example: "They developed an innovative English learning tool." }
     ];
 
-    let activeIdx = 0;
-    let flipped = false;
+    let activeIdx: number = 0;
+    let isFlipped: boolean = false;
 
-    // 1. Quản lý Streak & XP bằng localStorage
-    let xp = parseInt(localStorage.getItem('user_xp') || '0');
-    let streak = parseInt(localStorage.getItem('user_streak') || '1');
-    const lastActive = localStorage.getItem('last_active_date');
-    const today = new Date().toISOString().slice(0, 10);
+    // Quản lý điểm số và chuỗi ngày
+    let xp: number = parseInt(localStorage.getItem('user_xp') || '0', 10);
+    let streak: number = parseInt(localStorage.getItem('user_streak') || '1', 10);
 
-    if (lastActive) {
-      const diffDays = Math.floor((new Date(today) - new Date(lastActive)) / (1000 * 60 * 60 * 24));
-      if (diffDays === 1) {
-        streak += 1; // Học liên tiếp ngày hôm sau
-        localStorage.setItem('user_streak', streak);
-      } else if (diffDays > 1) {
-        streak = 1; // Bị đứt chuỗi
-        localStorage.setItem('user_streak', streak);
-      }
-    }
-    localStorage.setItem('last_active_date', today);
+    // Gán các hàm vào window để các nút HTML (onclick) gọi được
+    (window as any).renderCard = function(): void {
+      const item: VocabItem = deck[activeIdx];
+      (document.getElementById('cardWord') as HTMLElement).innerText = item.word;
+      (document.getElementById('cardPhonetic') as HTMLElement).innerText = item.phonetic;
+      (document.getElementById('cardMeaning') as HTMLElement).innerText = item.meaning;
+      (document.getElementById('cardExample') as HTMLElement).innerText = `"${item.example}"`;
+      (document.getElementById('counter') as HTMLElement).innerText = `${activeIdx + 1} / ${deck.length}`;
+      
+      (document.getElementById('dictationInput') as HTMLInputElement).value = '';
+      (document.getElementById('dictationFeedback') as HTMLElement).className = 'hidden';
+      (document.getElementById('xpDisplay') as HTMLElement).innerText = xp.toString();
+      (document.getElementById('streakDisplay') as HTMLElement).innerText = streak.toString();
 
-    // 2. Hiển thị UI
-    function renderCard() {
-      const item = deck[activeIdx];
-      document.getElementById('cardWord').innerText = item.word;
-      document.getElementById('cardPhonetic').innerText = item.phonetic;
-      document.getElementById('cardMeaning').innerText = item.meaning;
-      document.getElementById('cardExample').innerText = `"${item.example}"`;
-      document.getElementById('counter').innerText = `${activeIdx + 1} / ${deck.length}`;
-      document.getElementById('dictationInput').value = '';
-      document.getElementById('dictationFeedback').className = 'hidden';
-      document.getElementById('xpDisplay').innerText = xp;
-      document.getElementById('streakDisplay').innerText = streak;
+      if (isFlipped) (window as any).toggleFlip();
+    };
 
-      if (flipped) toggleFlip();
-    }
+    (window as any).toggleFlip = function(): void {
+      isFlipped = !isFlipped;
+      (document.getElementById('flashcard') as HTMLElement).classList.toggle('rotate-y-180', isFlipped);
+    };
 
-    function toggleFlip() {
-      flipped = !flipped;
-      document.getElementById('flashcard').classList.toggle('rotate-y-180', flipped);
-    }
-
-    // 3. Web Speech API (Phát âm chuẩn miễn phí)
-    function playSpeech() {
-      const text = deck[activeIdx].word;
-      const utterance = new SpeechSynthesisUtterance(text);
+    (window as any).playSpeech = function(): void {
+      const utterance = new SpeechSynthesisUtterance(deck[activeIdx].word);
       utterance.lang = "en-US";
       utterance.rate = 0.85;
-      window.speechSynthesis.cancel(); // Ngắt âm trước đó nếu đang đọc
+      window.speechSynthesis.cancel();
       window.speechSynthesis.speak(utterance);
-    }
+    };
 
-    // 4. Kiểm tra chính tả & Cộng XP
-    function verifyInput() {
-      const val = document.getElementById('dictationInput').value.trim().toLowerCase();
-      const target = deck[activeIdx].word.toLowerCase();
-      const fb = document.getElementById('dictationFeedback');
+    (window as any).verifyInput = function(): void {
+      const inputEl = document.getElementById('dictationInput') as HTMLInputElement;
+      const val: string = inputEl.value.trim().toLowerCase();
+      const target: string = deck[activeIdx].word.toLowerCase();
+      const fb = document.getElementById('dictationFeedback') as HTMLElement;
 
       if (val === target) {
         fb.innerText = "✓ Hoàn toàn chính xác! +10 XP";
         fb.className = "text-xs mt-2 font-bold text-emerald-600 block";
         xp += 10;
-        localStorage.setItem('user_xp', xp);
-        document.getElementById('xpDisplay').innerText = xp;
+        localStorage.setItem('user_xp', xp.toString());
+        (document.getElementById('xpDisplay') as HTMLElement).innerText = xp.toString();
       } else {
         fb.innerText = `✕ Chưa đúng! Từ chuẩn là: "${deck[activeIdx].word}"`;
         fb.className = "text-xs mt-2 font-medium text-rose-500 block";
       }
-    }
+    };
 
-    function changeCard(dir) {
+    (window as any).changeCard = function(dir: number): void {
       activeIdx = (activeIdx + dir + deck.length) % deck.length;
-      renderCard();
-    }
+      (window as any).renderCard();
+    };
 
-    renderCard();
+    // Chạy khi mở trang
+    (window as any).renderCard();
   </script>
 </body>
 </html>
