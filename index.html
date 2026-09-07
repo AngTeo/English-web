@@ -3,9 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FlashAI - TypeScript & JavaScript</title>
+  <title>FlashAI - Học Tiếng Anh Thông Minh</title>
+  
+  <!-- Giao diện Tailwind CSS & Icon FontAwesome -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
   <style>
     .perspective-1000 { perspective: 1000px; }
     .transform-style-3d { transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -15,7 +18,7 @@
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between">
 
-  <!-- Header -->
+  <!-- Header: Chuỗi Streak & Điểm XP -->
   <header class="bg-white border-b border-slate-200 px-6 py-4 sticky top-0 z-50">
     <div class="max-w-md mx-auto flex justify-between items-center">
       <div class="flex items-center space-x-2">
@@ -35,36 +38,43 @@
     </div>
   </header>
 
-  <!-- Flashcard -->
+  <!-- Thân trang web -->
   <main class="max-w-md mx-auto w-full px-4 py-6 flex-1 flex flex-col justify-center">
+
+    <!-- Thẻ Flashcard lật 3D -->
     <div class="perspective-1000 w-full h-72 cursor-pointer mb-5" onclick="toggleFlip()">
       <div id="flashcard" class="transform-style-3d relative w-full h-full shadow-lg rounded-2xl">
+        
+        <!-- Mặt trước (Tiếng Anh) -->
         <div class="backface-hidden absolute inset-0 bg-white border border-slate-200 rounded-2xl p-6 flex flex-col justify-between items-center text-center">
           <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Từ vựng (Chạm để xem nghĩa)</span>
           <div>
             <h2 id="cardWord" class="text-3xl font-extrabold text-slate-800 mb-2"></h2>
             <p id="cardPhonetic" class="text-sm font-mono text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md inline-block"></p>
           </div>
-          <button onclick="event.stopPropagation(); playSpeech();" class="p-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-full transition">
+          <button onclick="event.stopPropagation(); playSpeech();" class="p-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-full transition shadow-sm" title="Nghe phát âm">
             <i class="fa-solid fa-volume-high text-lg"></i>
           </button>
         </div>
+
+        <!-- Mặt sau (Tiếng Việt) -->
         <div class="backface-hidden rotate-y-180 absolute inset-0 bg-indigo-600 text-white rounded-2xl p-6 flex flex-col justify-between items-center text-center shadow-lg">
-          <span class="text-[11px] font-bold uppercase tracking-wider text-indigo-200">Ý nghĩa</span>
+          <span class="text-[11px] font-bold uppercase tracking-wider text-indigo-200">Ý nghĩa & Ví dụ</span>
           <div>
             <h3 id="cardMeaning" class="text-2xl font-bold mb-2"></h3>
             <p id="cardExample" class="text-sm text-indigo-100 italic px-2"></p>
           </div>
           <span class="text-[11px] text-indigo-200">Chạm để lật lại</span>
         </div>
+
       </div>
     </div>
 
-    <!-- Dictation -->
+    <!-- Ô luyện gõ từ (Dictation Quiz) -->
     <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm mb-5">
       <div class="flex justify-between items-center mb-2">
         <label class="text-xs font-bold text-slate-600 uppercase">Luyện nghe & gõ lại:</label>
-        <button onclick="playSpeech()" class="text-xs text-indigo-600 font-semibold hover:underline">
+        <button onclick="playSpeech()" class="text-xs text-indigo-600 font-semibold hover:underline flex items-center gap-1">
           <i class="fa-solid fa-volume-low"></i> Nghe lại
         </button>
       </div>
@@ -75,19 +85,24 @@
       <p id="dictationFeedback" class="text-xs mt-2 font-medium hidden"></p>
     </div>
 
-    <!-- Nút điều hướng -->
+    <!-- Nút chuyển từ -->
     <div class="flex justify-between items-center">
       <button onclick="changeCard(-1)" class="px-4 py-2 rounded-xl border border-slate-300 bg-white text-slate-700 font-semibold text-xs hover:bg-slate-50 transition">
         <i class="fa-solid fa-arrow-left mr-1"></i> Trước
       </button>
       <span id="counter" class="text-xs text-slate-500 font-bold">1 / 5</span>
       <button onclick="changeCard(1)" class="px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold text-xs hover:bg-indigo-700 transition">
-        Sau <i class="fa-solid fa-arrow-right ml-1"></i>
+        Tiếp theo <i class="fa-solid fa-arrow-right ml-1"></i>
       </button>
     </div>
+
   </main>
 
-  <!-- LIÊN KẾT FILE JAVASCRIPT ĐƯỢC BIÊN DỊCH TỪ TYPESCRIPT TẠI ĐÂY -->
+  <footer class="text-center py-4 text-xs text-slate-400">
+    FlashAI &bull; Hoàn toàn miễn phí với TypeScript & Web Speech API
+  </footer>
+
+  <!-- NỐI VỚI FILE JAVASCRIPT ĐƯỢC BIÊN DỊCH TỪ APP.TS -->
   <script src="app.js"></script>
 </body>
 </html>
